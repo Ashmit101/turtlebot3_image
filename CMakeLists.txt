@@ -13,18 +13,18 @@ find_package(ament_cmake REQUIRED)
 
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(cv_bridge REQUIRED)
+find_package(OpenCV REQUIRED)
 
-set(dependencies
-	"rclcpp"
-	"sensor_msgs"
-	)
-set(EXEC_NAME "image_viewer")
+add_executable(image_viewer src/image_sub.cpp)
 
-add_executable(${EXEC_NAME}  src/image_sub.cpp)
-ament_target_dependencies(${EXEC_NAME} ${dependencies})
+add_executable(cv_image_publisher src/opencv_bridge.cpp)
+ament_target_dependencies(image_viewer rclcpp sensor_msgs)
+ament_target_dependencies(cv_image_publisher rclcpp sensor_msgs cv_bridge OpenCV)
 
 install(TARGETS
-	${EXEC_NAME}
+	image_viewer
+	cv_image_publisher
 	DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
